@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Data Analyst Agent{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+{% block content %}
+
+{% if store.error %}
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb small mb-0">
+    <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+    <li class="breadcrumb-item active">Dashboard</li>
+  </ol>
+</nav>
+<div class="alert alert-danger">{{ store.error }}</div>
+{% else %}
+
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb small mb-0">
+    <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('main.upload') }}">Upload</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Results</li>
+  </ol>
+</nav>
+
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+  <div>
+    <div class="d-flex align-items-center gap-2 mb-1">
+      <span class="badge rounded-pill text-bg-success"><i class="bi bi-check-lg me-1" aria-hidden="true"></i>Analysis complete</span>
+    </div>
+    <h1 class="h3 fw-bold mb-1">Analysis dashboard</h1>
+    <p class="text-muted small mb-0 font-monospace">Session {{ session_id[:8] }}…</p>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-copy-session" title="Copy full session id" data-session="{{ session_id }}">
+      <i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy ID
+    </button>
+    <a class="btn btn-outline-primary" href="{{ url_for('main.dashboard_report_pdf', session_id=session_id) }}" title="Landscape one-page PDF with metrics and charts">
+      <i class="bi bi-file-earmark-pdf me-1" aria-hidden="true"></i>Export PDF report
+    </a>
+    <a class="btn btn-primary" href="{{ url_for('main.chat_page', session_id=session_id) }}">
+      <i class="bi bi-chat-dots me-1" aria-hidden="true"></i>Open chat
+    </a>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card dashboard-kpi shadow-sm h-100 p-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="kpi-icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-diagram-3" aria-hidden="true"></i></div>
+        <div>
+          <div class="text-muted small text-uppercase fw-semibold">Task</div>
+          <div class="fs-5 fw-semibold text-capitalize">{{ store.task }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card dashboard-kpi shadow-sm h-100 p-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="kpi-icon bg-success bg-opacity-10 text-success"><i class="bi bi-bullseye" aria-hidden="true"></i></div>
+        <div class="min-w-0">
+          <div class="text-muted small text-uppercase fw-semibold">Target</div>
+          <div class="fs-5 fw-semibold text-break">{{ store.target }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card dashboard-kpi shadow-sm h-100 p-3">
+      <div class="d-flex align-items-center gap-3">
+        <div class="kpi-icon bg-info bg-opacity-10 text-info"><i class="bi bi-table" aria-hidden="true"></i></div>
+        <div>
+          <div class="text-muted small text-uppercase fw-semibold">Rows</div>
+          <div class="fs-5 fw-semibold">{{ store.summary.get('n_rows', '—') }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  {% for m in metric_cards %}
+  <div class="col-6 col-lg-4 col-xl-3">
+    <div class="card dashboard-metric-card shadow-sm p-3">
+      <div class="metric-label mb-1">{{ m.label }}</div>
+      <div class="metric-value text-break">{{ m.value }}</div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-5">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-header bg-white border-bottom py-3">
+        <h2 class="h6 mb-0 fw-semibold"><i class="bi bi-shield-exclamation text-warning me-2" aria-hidden="true"></i>Data quality &amp; risks</h2>
+      </div>
+      <div class="card-body">
+        {% if store.risks %}
+          <ul class="list-group list-group-flush rounded border">
+            {% for r in store.risks %}
+            <li class="list-group-item d-flex gap-2 align-items-start">
+              <i class="bi bi-exclamation-triangle-fill text-warning mt-1 flex-shrink-0" aria-hidden="true"></i>
+              <span class="small">{{ r.get('detail', r) }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <div class="d-flex align-items-center gap-2 text-success">
+            <i class="bi bi-check-circle-fill fs-4" aria-hidden="true"></i>
+            <span class="small mb-0">No major deterministic risks were flagged for this run.</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h2 class="h6 mb-0 fw-semibold"><i class="bi bi-bar-chart-steps text-primary me-2" aria-hidden="true"></i>Top feature importance</h2>
+        <span class="badge text-bg-light text-dark border">Random Forest</span>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover table-sm align-middle mb-0">
+            <thead class="table-light">
+              <tr><th>Feature</th><th class="text-end" style="min-width:7rem">Importance</th><th style="min-width:8rem"></th></tr>
+            </thead>
+            <tbody>
+              {% set fi_max = top_fi[0][1] if top_fi else 1 %}
+              {% for name, score in top_fi %}
+              <tr>
+                <td class="text-break small">{{ name }}</td>
+                <td class="text-end small font-monospace">{{ '%.4f'|format(score) }}</td>
+                <td>
+                  <div class="fi-bar-wrap">
+                    <div class="fi-bar" style="width: {{ (score / fi_max * 100) | round(2) }}%;"></div>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mb-2">
+  <h2 class="h5 fw-bold mb-1">Visualizations</h2>
+  <p class="text-muted small mb-0">Target distribution, feature importance, and correlations. Click an image to enlarge.</p>
+</div>
+<div class="row g-4 mb-4">
+  {% for p in plot_items %}
+  <div class="col-lg-6">
+    <div class="card dashboard-plot-card shadow-sm h-100{% if p.key == 'corr_heatmap' %} dashboard-plot-corr{% endif %}">
+      <div class="plot-toolbar px-3 py-2 d-flex justify-content-between align-items-center">
+        <span class="small fw-semibold text-secondary">{{ p.title }}</span>
+        <button type="button" class="btn btn-sm btn-outline-secondary border-0 plot-zoom" data-src="{{ p.src }}" data-title="{{ p.title }}" title="Enlarge">
+          <i class="bi bi-arrows-fullscreen" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="p-2 bg-white text-center dashboard-plot-img-wrap">
+        <img src="{{ p.src }}" class="img-fluid rounded plot-thumb" alt="{{ p.title }}" data-src="{{ p.src }}" data-title="{{ p.title }}">
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if store.insight_highlights %}
+<div class="card shadow-sm border-0 border-start border-4 border-primary mb-3">
+  <div class="card-body p-4">
+    <h2 class="h5 fw-bold mb-3"><i class="bi bi-lightning-charge-fill text-primary me-2" aria-hidden="true"></i>Main highlights</h2>
+    <p class="text-muted small mb-3">Short takeaways you can share with stakeholders.</p>
+    {% for line in store.insight_highlights %}
+    <div class="dashboard-highlight-item">{{ line | highlight_numerics }}</div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if store.insight_details %}
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-body p-0">
+    <div class="p-4 border-bottom bg-light">
+      <h2 class="h5 fw-bold mb-1"><i class="bi bi-journal-text text-secondary me-2" aria-hidden="true"></i>Full analysis narrative</h2>
+      <p class="text-muted small mb-0">Deeper context, drivers, and suggested follow-ups.</p>
+    </div>
+    <div class="p-4 insight-narrative">
+      {% for line in store.insight_details %}
+      <p class="mb-3 insight-narrative-line small text-body-secondary">{{ line | highlight_numerics }}</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div class="modal fade" id="plotModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-secondary py-2">
+        <h3 class="modal-title h6 text-white" id="plotModalTitle">Chart</h3>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-2 text-center">
+        <img src="" alt="" id="plotModalImg" class="img-fluid rounded">
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  const modalEl = document.getElementById('plotModal');
+  if (!modalEl) return;
+  const modal = new bootstrap.Modal(modalEl);
+  const modalImg = document.getElementById('plotModalImg');
+  const modalTitle = document.getElementById('plotModalTitle');
+
+  function openPlot(src, title) {
+    modalImg.src = src;
+    modalImg.alt = title || 'Chart';
+    modalTitle.textContent = title || 'Chart';
+    modal.show();
+  }
+
+  document.querySelectorAll('.plot-thumb, .plot-zoom').forEach(function (el) {
+    el.addEventListener('click', function () {
+      const src = el.getAttribute('data-src');
+      const title = el.getAttribute('data-title');
+      if (src) openPlot(src, title);
+    });
+  });
+
+  var copyBtn = document.getElementById('btn-copy-session');
+  if (copyBtn && navigator.clipboard) {
+    copyBtn.addEventListener('click', function () {
+      var id = copyBtn.getAttribute('data-session');
+      navigator.clipboard.writeText(id).then(function () {
+        copyBtn.innerHTML = '<i class="bi bi-check2 me-1" aria-hidden="true"></i>Copied';
+        setTimeout(function () {
+          copyBtn.innerHTML = '<i class="bi bi-clipboard me-1" aria-hidden="true"></i>Copy ID';
+        }, 2000);
+      });
+    });
+  }
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,93 @@
+/* Preview / target selection */
+.preview-page-header {
+  max-width: 42rem;
+}
+
+.preview-step-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #0d6efd;
+  background: rgba(13, 110, 253, 0.08);
+  border: 1px solid rgba(13, 110, 253, 0.2);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  margin-bottom: 0.75rem;
+}
+
+.preview-file-card {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: linear-gradient(180deg, #fff 0%, #f8f9fa 100%);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.preview-file-card .file-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.65rem;
+  background: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+
+.preview-table-card {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.preview-table-card .table {
+  margin-bottom: 0;
+  font-size: 0.8125rem;
+}
+
+.preview-table-card thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f1f3f5;
+  border-bottom: 2px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.preview-column-list {
+  max-height: 280px;
+  overflow-y: auto;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.preview-column-list .list-group-item {
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.preview-column-list .list-group-item:hover {
+  background: #f8f9ff;
+}
+
+.preview-column-list .list-group-item.active {
+  background: #e7f1ff;
+  border-left-color: #0d6efd;
+  color: inherit;
+}
+
+.preview-kind-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

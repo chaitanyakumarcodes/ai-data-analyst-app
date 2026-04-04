@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}Upload · Data Analyst Agent{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/upload.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-xl-7">
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb small mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Upload</li>
+      </ol>
+    </nav>
+
+    <div class="upload-page-header mb-4">
+      <div class="upload-step-pill">
+        <span class="text-primary">Step 1</span>
+        <span class="text-muted">of 2</span>
+        <span class="vr mx-1"></span>
+        <span>Next: choose target column</span>
+      </div>
+      <h1 class="h3 fw-bold mb-2">Upload your dataset</h1>
+      <p class="text-muted mb-0">
+        We’ll analyze your CSV and train a model—then you’ll pick the column to predict.
+      </p>
+    </div>
+
+    <div class="card shadow-sm border-0 p-4 p-md-5">
+      <form
+        id="upload-form"
+        method="post"
+        enctype="multipart/form-data"
+        novalidate
+      >
+        <input
+          type="file"
+          class="visually-hidden"
+          name="file"
+          id="file-input"
+          accept=".csv,text/csv"
+          required
+        >
+
+        <label for="file-input" class="upload-dropzone d-block mb-3" id="dropzone" tabindex="0" role="button" aria-describedby="upload-help">
+          <div class="upload-icon"><i class="bi bi-cloud-arrow-up" aria-hidden="true"></i></div>
+          <div class="fw-semibold mb-1">Drag &amp; drop a CSV here</div>
+          <div class="text-muted small mb-0">or click to browse · <strong>.csv</strong> only · max <strong>{{ max_upload_mb }} MB</strong></div>
+        </label>
+
+        <div id="file-feedback" class="alert alert-danger py-2 small d-none" role="alert"></div>
+
+        <div id="file-card" class="upload-file-card mb-3" aria-live="polite">
+          <div class="rounded text-center p-2 bg-primary bg-opacity-10 text-primary flex-shrink-0">
+            <i class="bi bi-filetype-csv fs-4" aria-hidden="true"></i>
+          </div>
+          <div class="file-meta">
+            <div class="file-name" id="file-name"></div>
+            <div class="file-size" id="file-size"></div>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-secondary flex-shrink-0" id="btn-clear-file" aria-label="Remove file">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <ul class="upload-hint-list list-unstyled mb-4" id="upload-help">
+          <li><i class="bi bi-check2-circle text-success me-1" aria-hidden="true"></i>First row should be column headers</li>
+          <li><i class="bi bi-check2-circle text-success me-1" aria-hidden="true"></i>Include the column you want to predict (you’ll select it next)</li>
+          <li><i class="bi bi-check2-circle text-success me-1" aria-hidden="true"></i>Encoding: UTF-8 or Latin-1 usually work</li>
+        </ul>
+
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+          <button type="submit" class="btn btn-primary btn-lg px-4 d-inline-flex align-items-center gap-2" id="btn-submit">
+            <span class="submit-label d-inline-flex align-items-center gap-2"><i class="bi bi-arrow-right-circle" aria-hidden="true"></i>Continue</span>
+            <span class="submit-loading d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span class="submit-loading d-none">Uploading…</span>
+          </button>
+          <a href="{{ url_for('main.index') }}" class="btn btn-link text-decoration-none">Back to home</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  const maxBytes = {{ max_upload_bytes | int }};
+  const form = document.getElementById('upload-form');
+  const input = document.getElementById('file-input');
+  const dropzone = document.getElementById('dropzone');
+  const fileCard = document.getElementById('file-card');
+  const fileName = document.getElementById('file-name');
+  const fileSize = document.getElementById('file-size');
+  const btnClear = document.getElementById('btn-clear-file');
+  const btnSubmit = document.getElementById('btn-submit');
+  const feedback = document.getElementById('file-feedback');
+  const labelSubmit = form.querySelector('.submit-label');
+  const spinners = form.querySelectorAll('.submit-loading');
+
+  function formatBytes(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+    return (n / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+
+  function showError(msg) {
+    feedback.textContent = msg;
+    feedback.classList.remove('d-none');
+    dropzone.classList.add('is-invalid');
+  }
+
+  function clearError() {
+    feedback.classList.add('d-none');
+    feedback.textContent = '';
+    dropzone.classList.remove('is-invalid');
+  }
+
+  function validateFile(file) {
+    if (!file) return 'Choose a file first.';
+    const name = file.name || '';
+    if (!name.toLowerCase().endsWith('.csv')) {
+      return 'Please choose a .csv file.';
+    }
+    if (file.size > maxBytes) {
+      return 'File is larger than ' + (maxBytes / (1024 * 1024)) + ' MB.';
+    }
+    return null;
+  }
+
+  function setFile(file) {
+    clearError();
+    if (!file) {
+      input.value = '';
+      fileCard.classList.remove('is-visible');
+      return;
+    }
+    const err = validateFile(file);
+    if (err) {
+      showError(err);
+      input.value = '';
+      fileCard.classList.remove('is-visible');
+      return;
+    }
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    input.files = dt.files;
+    fileName.textContent = file.name;
+    fileSize.textContent = formatBytes(file.size);
+    fileCard.classList.add('is-visible');
+  }
+
+  input.addEventListener('change', function () {
+    const f = input.files && input.files[0];
+    setFile(f || null);
+  });
+
+  btnClear.addEventListener('click', function () {
+    setFile(null);
+  });
+
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (ev) {
+    dropzone.addEventListener(ev, function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+  });
+
+  dropzone.addEventListener('dragenter', function () {
+    dropzone.classList.add('is-dragover');
+  });
+  dropzone.addEventListener('dragover', function () {
+    dropzone.classList.add('is-dragover');
+  });
+  dropzone.addEventListener('dragleave', function () {
+    dropzone.classList.remove('is-dragover');
+  });
+  dropzone.addEventListener('drop', function (e) {
+    dropzone.classList.remove('is-dragover');
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    setFile(f || null);
+  });
+
+  dropzone.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      input.click();
+    }
+  });
+
+  form.addEventListener('submit', function (e) {
+    const f = input.files && input.files[0];
+    const err = validateFile(f);
+    if (err) {
+      e.preventDefault();
+      showError(err);
+      return;
+    }
+    btnSubmit.disabled = true;
+    if (labelSubmit) labelSubmit.classList.add('d-none');
+    spinners.forEach(function (el) { el.classList.remove('d-none'); });
+  });
+})();
+</script>
+{% endblock %}

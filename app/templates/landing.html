@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Data Analyst Agent — automated insights from your CSV{% endblock %}
+{% block outer_class %}container-fluid p-0 pb-5{% endblock %}
+{% block flash_outer_class %}container{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+{% block content %}
+<section class="landing-hero mb-0">
+  <div class="container position-relative" style="z-index: 1;">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <div class="landing-hero-badge">
+          <i class="bi bi-stars" aria-hidden="true"></i>
+          Mini data scientist in a box
+        </div>
+        <h1 class="display-5 mb-3">Turn any CSV into analysis, a model, and a chat that knows your data.</h1>
+        <p class="lead mb-4">
+          Upload a dataset, pick a target column, and get cleaning, EDA, a trained model,
+          charts, risk flags, and AI insights—then ask follow-up questions grounded in your results.
+        </p>
+        <div class="d-flex flex-wrap gap-2 mb-4">
+          <a class="btn btn-light btn-lg px-4 shadow-sm" href="{{ url_for('main.upload') }}">
+            <i class="bi bi-cloud-upload me-2" aria-hidden="true"></i>Upload dataset
+          </a>
+          <a class="btn btn-outline-light btn-lg px-4" href="#how-it-works">
+            How it works
+          </a>
+        </div>
+        <p class="small mb-0 opacity-75">
+          <i class="bi bi-filetype-csv me-1" aria-hidden="true"></i>CSV · up to 16 MB · target column you choose
+        </p>
+      </div>
+      <div class="col-lg-5">
+        <div class="row g-3">
+          <div class="col-6">
+            <div class="landing-metric h-100">
+              <div class="value"><i class="bi bi-diagram-3 me-1" aria-hidden="true"></i>Pipeline</div>
+              <div class="label">Clean → train → metrics</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="landing-metric h-100">
+              <div class="value"><i class="bi bi-chat-dots me-1" aria-hidden="true"></i>Chat</div>
+              <div class="label">Tool-backed answers</div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="landing-metric">
+              <div class="value"><i class="bi bi-shield-check me-1" aria-hidden="true"></i>Grounded</div>
+              <div class="label">Insights use your stored stats—not guessed numbers</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <h2 class="h3 fw-bold mb-2">Everything you need in one flow</h2>
+    <p class="text-muted mb-0 mx-auto" style="max-width: 40rem;">
+      A deterministic ML core plus an optional LLM layer for interpretation—separated so results stay reliable.
+    </p>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card landing-card shadow-sm p-4">
+        <div class="landing-icon bg-primary bg-opacity-10 text-primary">
+          <i class="bi bi-funnel" aria-hidden="true"></i>
+        </div>
+        <h3 class="h5 fw-semibold">Automatic pipeline</h3>
+        <p class="text-muted small mb-0">
+          Handles missing values and mixed types, trains a Random Forest, and surfaces metrics and plots you can trust.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card landing-card shadow-sm p-4">
+        <div class="landing-icon bg-success bg-opacity-10 text-success">
+          <i class="bi bi-lightbulb" aria-hidden="true"></i>
+        </div>
+        <h3 class="h5 fw-semibold">Insights &amp; risks</h3>
+        <p class="text-muted small mb-0">
+          Summary stats, correlations, feature importance, plus flags for imbalance, missingness, and leakage signals.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card landing-card shadow-sm p-4">
+        <div class="landing-icon bg-info bg-opacity-10 text-info">
+          <i class="bi bi-chat-left-text" aria-hidden="true"></i>
+        </div>
+        <h3 class="h5 fw-semibold">Interactive chat</h3>
+        <p class="text-muted small mb-0">
+          Ask about drivers, metrics, or subsets—the assistant calls tools on your session data instead of inventing facts.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bg-white border-top border-bottom py-5" id="how-it-works">
+  <div class="container">
+    <h2 class="h4 fw-bold text-center mb-4">How it works</h2>
+    <div class="row g-4 text-center text-md-start">
+      <div class="col-md-3">
+        <div class="landing-step-num mx-auto mx-md-0">1</div>
+        <h3 class="h6 fw-semibold">Upload</h3>
+        <p class="text-muted small mb-0">Drop a CSV. We keep it in your session for this run.</p>
+      </div>
+      <div class="col-md-3">
+        <div class="landing-step-num mx-auto mx-md-0">2</div>
+        <h3 class="h6 fw-semibold">Choose target</h3>
+        <p class="text-muted small mb-0">Pick the column to predict—no auto-guessing.</p>
+      </div>
+      <div class="col-md-3">
+        <div class="landing-step-num mx-auto mx-md-0">3</div>
+        <h3 class="h6 fw-semibold">Review dashboard</h3>
+        <p class="text-muted small mb-0">Metrics, charts, importances, and generated insights.</p>
+      </div>
+      <div class="col-md-3">
+        <div class="landing-step-num mx-auto mx-md-0">4</div>
+        <h3 class="h6 fw-semibold">Chat deeper</h3>
+        <p class="text-muted small mb-0">Query the model and dataset through guided tools.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="landing-cta-strip p-4 p-md-5 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+    <div>
+      <h2 class="h5 fw-bold mb-1">Ready to analyze your data?</h2>
+      <p class="text-muted small mb-0">Start with a CSV—no notebook setup required.</p>
+    </div>
+    <a class="btn btn-primary btn-lg px-4" href="{{ url_for('main.upload') }}">
+      Get started
+      <i class="bi bi-arrow-right ms-2" aria-hidden="true"></i>
+    </a>
+  </div>
+</div>
+{% endblock %}

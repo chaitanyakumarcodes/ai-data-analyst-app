@@ -1,0 +1,129 @@
+/* Analysis dashboard */
+.dashboard-kpi {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-kpi:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1.25rem rgba(13, 110, 253, 0.1);
+}
+
+.dashboard-kpi .kpi-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.dashboard-metric-card {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  height: 100%;
+  background: linear-gradient(165deg, #fff 0%, #f8f9fa 100%);
+}
+
+.dashboard-metric-card .metric-value {
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #0d6efd;
+}
+
+.dashboard-metric-card .metric-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6c757d;
+}
+
+.dashboard-plot-card {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-plot-card .plot-toolbar {
+  background: #f8f9fa;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dashboard-plot-card img {
+  cursor: zoom-in;
+  transition: opacity 0.2s ease;
+}
+
+.dashboard-plot-card img:hover {
+  opacity: 0.95;
+}
+
+.dashboard-plot-img-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+/* Correlation heatmap: cap visual size (PNG is often large) */
+.dashboard-plot-corr .dashboard-plot-img-wrap {
+  max-height: 300px;
+  overflow: hidden;
+}
+
+.dashboard-plot-corr img.plot-thumb {
+  max-height: 280px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.insight-narrative .insight-number {
+  font-variant-numeric: tabular-nums;
+}
+
+.insight-narrative-line:last-child {
+  margin-bottom: 0 !important;
+}
+
+.dashboard-highlight-item {
+  position: relative;
+  padding-left: 1.35rem;
+  margin-bottom: 0.65rem;
+}
+
+.dashboard-highlight-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #0d6efd;
+}
+
+.fi-bar-wrap {
+  height: 0.35rem;
+  border-radius: 999px;
+  background: #e9ecef;
+  overflow: hidden;
+  min-width: 4rem;
+}
+
+.fi-bar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #0d6efd, #6ea8fe);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-kpi:hover {
+    transform: none;
+  }
+}

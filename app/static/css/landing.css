@@ -1,0 +1,115 @@
+/* Landing page — scoped utilities */
+.landing-hero {
+  background: linear-gradient(135deg, #0b5ed7 0%, #4c2bae 55%, #6f42c1 100%);
+  color: #fff;
+  padding: clamp(2.5rem, 6vw, 4.5rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.landing-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 60% at 80% 20%,
+    rgba(255, 255, 255, 0.12),
+    transparent 55%
+  );
+  pointer-events: none;
+}
+
+.landing-hero h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.landing-hero .lead {
+  opacity: 0.92;
+  max-width: 36rem;
+}
+
+.landing-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  margin-bottom: 1rem;
+}
+
+.landing-metric {
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1rem 1.25rem;
+  backdrop-filter: blur(8px);
+}
+
+.landing-metric .value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.landing-metric .label {
+  font-size: 0.75rem;
+  opacity: 0.85;
+  margin-top: 0.15rem;
+}
+
+.landing-card {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;
+}
+
+.landing-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.75rem 2rem rgba(13, 110, 253, 0.12) !important;
+}
+
+.landing-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.landing-step-num {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--bs-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.landing-cta-strip {
+  background: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-card:hover {
+    transform: none;
+  }
+}
