@@ -3,7 +3,7 @@ services:
     name: ai-data-analyst
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: web: gunicorn run:app
+    startCommand: gunicorn run:app
     envVars:
       - key: OPENAI_API_KEY
         sync: false
