@@ -5,19 +5,23 @@ A Flask-based application that transforms CSV datasets into comprehensive analys
 ## Screenshots
 
 ### Upload Interface
-![Upload Page](./docs/screenshots/upload.png)
+<img width="1876" height="863" alt="Screenshot 2026-04-05 104344" src="https://github.com/user-attachments/assets/399d51da-cdcc-4c51-bb9d-97544c82e331" />
+
 *Drag-and-drop CSV upload with real-time validation*
 
 ### Target Selection
-![Target Selection](./docs/screenshots/target-selection.png)
+<img width="1883" height="875" alt="Screenshot 2026-04-05 104536" src="https://github.com/user-attachments/assets/94e1ffa5-747e-4e9c-92fe-738bda2e8649" />
+
 *Interactive column picker with data preview and type detection*
 
 ### Interactive Chat
-![Chat Interface](./docs/screenshots/chat.png)
+<img width="1877" height="872" alt="Screenshot 2026-04-05 104744" src="https://github.com/user-attachments/assets/dae7bafc-b4c5-4f62-8f2e-400a7a4729e4" />
+
 *AI assistant with tool-calling capabilities grounded in your analysis results*
 
 ### Sample PDF Report
-![Sample Report](./docs/screenshots/sample-report.png)
+<img width="1146" height="614" alt="image" src="https://github.com/user-attachments/assets/cb656177-8e95-4c0b-bb40-397618a860c7" />
+
 *Professional PDF export with metrics, visualizations, and insights*
 
 ## Overview
